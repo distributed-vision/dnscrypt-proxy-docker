@@ -56,6 +56,8 @@ RUN set -x && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+RUN apt-get install -y etcd
+
 ENV LISTEN_ADDR 0.0.0.0:53
 ENV RESOLVER_ADDR 176.56.237.171:443
 ENV PROVIDER_NAME 2.dnscrypt-cert.resolver1.dnscrypt.eu
@@ -65,13 +67,8 @@ ENV EDNS_PAYLOAD_SIZE 1252
 
 EXPOSE 53/tcp 53/udp
 
-CMD /opt/dnscrypt-proxy/sbin/dnscrypt-proxy \
-                   --user=_dnscrypt-proxy \
-                   --local-address=$LISTEN_ADDR \
-                   --provider-name=$PROVIDER_NAME \
-                   --provider-key=$PROVIDER_KEY \
-                   --resolver-address=$RESOLVER_ADDR \
-                   --loglevel=$LOGLEVEL \
-                   --edns-payload-size=$EDNS_PAYLOAD_SIZE \
-                   --ephemeral-keys
+ADD run.sh /run.sh
+RUN chmod +x /run.sh
+
+CMD ["/run.sh"]
 #
