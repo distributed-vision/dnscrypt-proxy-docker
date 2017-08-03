@@ -1,4 +1,4 @@
-FROM debian:8
+FROM ubuntu:trusty
 MAINTAINER dnscrypt.io
 
 ENV BUILD_DEPENDENCIES \
@@ -56,7 +56,14 @@ RUN set -x && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN apt-get install -y etcd
+RUN set -x && apt-get update && apt-get install -y curl && \
+    curl -L https://github.com/coreos/etcd/releases/download/v2.2.5/etcd-v2.2.5-linux-amd64.tar.gz -o etcd-v2.2.5-linux-amd64.tar.gz && \
+    tar xzvf etcd-v2.2.5-linux-amd64.tar.gz && \
+    cd etcd-v2.2.5-linux-amd64 && \
+    cp ./etcdctl /usr/local/bin && \
+    chmod +x /usr/local/bin/etcdctl && \
+    cd ../ && rm -r ./etcd-v2.2.5-linux-amd64  && rm etcd-v2.2.5-linux-amd64.tar.gz
+
 
 ENV LISTEN_ADDR 0.0.0.0:53
 ENV RESOLVER_ADDR 176.56.237.171:443
