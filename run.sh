@@ -39,5 +39,5 @@ do
    fi
    sleep 1
 done
-sudo /opt/dnscrypt-proxy/sbin/dnscrypt-proxy -k  AE29:DB12:5452:0DA9:AE49:E76F:92F9:6F09:D014:903B:E280:1B9E:99F1:2438:D24A:3AEC -r $IP:443 -N 2.dnscrypt-cert.yourdomain.com  127.0.0.1:53 -K /private.key
+/opt/dnscrypt-proxy/sbin/dnscrypt-proxy -k  AE29:DB12:5452:0DA9:AE49:E76F:92F9:6F09:D014:903B:E280:1B9E:99F1:2438:D24A:3AEC -r $IP:443 -N 2.dnscrypt-cert.yourdomain.com --local-address  0.0.0.0:53 -K /private.key
 
