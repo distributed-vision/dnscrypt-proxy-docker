@@ -24,9 +24,20 @@ do
    then
         echo "Got wrapper host"
         echo $WRAPPER
-        break
+        IP=`getent hosts $WRAPPER | awk '{ print $1 }'`
+        if [[ $IP != "" ]]
+        then
+           break
+        else
+           if echo "${WRAPPER}" | grep '[a-z:A-Z]' >/dev/null; then
+               echo 'wrapper contains name which was not resolved or added as --link on start of container'
+           else
+               IP=$WRAPPER
+               break
+           fi
+        fi
    fi
    sleep 1
 done
-sudo /opt/dnscrypt-proxy/sbin/dnscrypt-proxy -k  AE29:DB12:5452:0DA9:AE49:E76F:92F9:6F09:D014:903B:E280:1B9E:99F1:2438:D24A:3AEC -r $WRAPPER -N 2.dnscrypt-cert.yourdomain.com  127.0.0.1:53 -K /private.key
+sudo /opt/dnscrypt-proxy/sbin/dnscrypt-proxy -k  AE29:DB12:5452:0DA9:AE49:E76F:92F9:6F09:D014:903B:E280:1B9E:99F1:2438:D24A:3AEC -r $IP:443 -N 2.dnscrypt-cert.yourdomain.com  127.0.0.1:53 -K /private.key
 
